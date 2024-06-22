@@ -434,45 +434,7 @@ namespace eosiosystem {
       }
    }
 
-   void system_contract::delegatebw( const name& from, const name& receiver,
-                                     const asset& stake_net_quantity,
-                                     const asset& stake_cpu_quantity, bool transfer )
-   {
-      asset zero_asset( 0, core_symbol() );
-      check( stake_cpu_quantity >= zero_asset, "must stake a positive amount" );
-      check( stake_net_quantity >= zero_asset, "must stake a positive amount" );
-      check( stake_net_quantity.amount + stake_cpu_quantity.amount > 0, "must stake a positive amount" );
-      check( !transfer || from != receiver, "cannot use transfer flag if delegating to self" );
 
-      changebw( from, receiver, stake_net_quantity, stake_cpu_quantity, transfer);
-   } // delegatebw
-
-   void system_contract::undelegatebw( const name& from, const name& receiver,
-                                       const asset& unstake_net_quantity, const asset& unstake_cpu_quantity )
-   {
-      asset zero_asset( 0, core_symbol() );
-      check( unstake_cpu_quantity >= zero_asset, "must unstake a positive amount" );
-      check( unstake_net_quantity >= zero_asset, "must unstake a positive amount" );
-      check( unstake_cpu_quantity.amount + unstake_net_quantity.amount > 0, "must unstake a positive amount" );
-      check( _gstate.thresh_activated_stake_time != time_point(),
-             "cannot undelegate bandwidth until the chain is activated (at least 15% of all tokens participate in voting)" );
-
-      changebw( from, receiver, -unstake_net_quantity, -unstake_cpu_quantity, false);
-   } // undelegatebw
-
-
-   void system_contract::refund( const name& owner ) {
-      require_auth( owner );
-
-      refunds_table refunds_tbl( get_self(), owner.value );
-      auto req = refunds_tbl.find( owner.value );
-      check( req != refunds_tbl.end(), "refund request not found" );
-      check( req->request_time + seconds(refund_delay_sec) <= current_time_point(),
-             "refund is not available yet" );
-      token::transfer_action transfer_act{ token_account, { {stake_account, active_permission}, {req->owner, active_permission} } };
-      transfer_act.send( stake_account, req->owner, req->net_amount + req->cpu_amount, "unstake" );
-      refunds_tbl.erase( req );
-   }
 
 
 } //namespace eosiosystem
