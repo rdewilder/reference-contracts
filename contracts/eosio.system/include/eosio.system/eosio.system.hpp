@@ -1124,7 +1124,6 @@ namespace eosiosystem {
                system_contract* this_contract;
          };
 
-         registration<&system_contract::update_rex_stake> vote_stake_updater{ this };
 
          // defined in power.cpp
          void adjust_resources(name payer, name account, symbol core_symbol, int64_t net_delta, int64_t cpu_delta, bool must_not_be_managed = false);
