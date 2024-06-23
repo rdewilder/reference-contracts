@@ -215,7 +215,6 @@ namespace eosiosystem {
         res.cpu_weight = asset( 0, system_contract::get_core_symbol() );
       });
 
-      set_resource_limits( new_account_name, 0, 0, 0 );
    }
 
    void native::setabi( const name& acnt, const std::vector<char>& abi,
@@ -234,7 +233,6 @@ namespace eosiosystem {
       }
    }
 
-  [[eosio::action]]
     void init()
     {
         // set ram market
