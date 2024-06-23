@@ -233,7 +233,7 @@ namespace eosiosystem {
       }
    }
 
-    void init()
+    void system_contract::init()
     {
         // set ram market
         rammarket _rammarket(get_self(), get_self().value);
