@@ -321,7 +321,8 @@ namespace eosiosystem {
             if( !(net_managed && cpu_managed) ) {
                int64_t ram_bytes, net, cpu;
                get_resource_limits( receiver, ram_bytes, net, cpu );
-           }
+            }
+         }
 
          if ( tot_itr->is_empty() ) {
             totals_tbl.erase( tot_itr );
@@ -424,8 +425,5 @@ namespace eosiosystem {
          update_votes( voter, voter_itr->proxy, voter_itr->producers, false );
       }
    }
-
-
-
 
 } //namespace eosiosystem
