@@ -234,28 +234,30 @@ namespace eosiosystem {
       }
    }
 
-   void system_contract::init( unsigned_int version, const symbol& core ) {
-      require_auth( get_self() );
-      check( version.value == 0, "unsupported version for init action" );
+  [[eosio::action]]
+    void init()
+    {
+        // set ram market
+        rammarket _rammarket(get_self(), get_self().value);
+        auto itr = _rammarket.find(symbol("RAMCORE", 4).raw());
 
-      auto itr = _rammarket.find(ramcore_symbol.raw());
-      check( itr == _rammarket.end(), "system contract has already been initialized" );
+        if (itr == _rammarket.end()) {
+            _rammarket.emplace(get_self(), [&](auto& m) {
+                m.supply.amount = 100000000000000;
+                m.supply.symbol = symbol("RAMCORE", 4);
+                m.base.balance.amount = 129542469746;
+                m.base.balance.symbol = symbol("RAM", 0);
+                m.quote.balance.amount = 147223045946;
+                m.quote.balance.symbol = symbol("EOS", 4);
+            });
+        }
 
-      auto system_token_supply   = eosio::token::get_supply(token_account, core.code() );
-      check( system_token_supply.symbol == core, "specified core symbol does not exist (precision mismatch)" );
-
-      check( system_token_supply.amount > 0, "system token supply must be greater than 0" );
-      _rammarket.emplace( get_self(), [&]( auto& m ) {
-         m.supply.amount = 100000000000000ll;
-         m.supply.symbol = ramcore_symbol;
-         m.base.balance.amount = int64_t(_gstate.free_ram());
-         m.base.balance.symbol = ram_symbol;
-         m.quote.balance.amount = system_token_supply.amount / 1000;
-         m.quote.balance.symbol = core;
-      });
-
-      token::open_action open_act{ token_account, { {get_self(), active_permission} } };
-      open_act.send( rex_account, core, get_self() );
-   }
+        // set global state
+        global_state_singleton _global(get_self(), get_self().value);
+        eosio_global_state global;
+        global.max_ram_size = 418945440768;
+        global.total_ram_bytes_reserved = 321908101425;
+        _global.set(global, get_self());
+    }
 
 } /// eosio.system

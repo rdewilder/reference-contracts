@@ -762,7 +762,7 @@ namespace eosiosystem {
           * @param core - the system symbol.
           */
          [[eosio::action]]
-         void init( unsigned_int version, const symbol& core );
+         void init();
 
 
          // functions defined in delegate_bandwidth.cpp
