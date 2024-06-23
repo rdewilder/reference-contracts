@@ -989,37 +989,6 @@ namespace eosiosystem {
          [[eosio::action]]
          void rmvproducer( const name& producer );
 
-
-         /**
-          * Configure the `power` market. The market becomes available the first time this
-          * action is invoked.
-          */
-         [[eosio::action]]
-         void cfgpowerup( powerup_config& args );
-
-         /**
-          * Process power queue and update state. Action does not execute anything related to a specific user.
-          *
-          * @param user - any account can execute this action
-          * @param max - number of queue items to process
-          */
-         [[eosio::action]]
-         void powerupexec( const name& user, uint16_t max );
-
-         /**
-          * Powerup NET and CPU resources by percentage
-          *
-          * @param payer - the resource buyer
-          * @param receiver - the resource receiver
-          * @param days - number of days of resource availability. Must match market configuration.
-          * @param net_frac - fraction of net (100% = 10^15) managed by this market
-          * @param cpu_frac - fraction of cpu (100% = 10^15) managed by this market
-          * @param max_payment - the maximum amount `payer` is willing to pay. Tokens are withdrawn from
-          *    `payer`'s token balance.
-          */
-         [[eosio::action]]
-         void powerup( const name& payer, const name& receiver, uint32_t days, int64_t net_frac, int64_t cpu_frac, const asset& max_payment );
-
          /**
           * limitauthchg opts into or out of restrictions on updateauth, deleteauth, linkauth, and unlinkauth.
           *
@@ -1056,9 +1025,6 @@ namespace eosiosystem {
          using claimrewards_action = eosio::action_wrapper<"claimrewards"_n, &system_contract::claimrewards>;
          using rmvproducer_action = eosio::action_wrapper<"rmvproducer"_n, &system_contract::rmvproducer>;
 
-         using cfgpowerup_action = eosio::action_wrapper<"cfgpowerup"_n, &system_contract::cfgpowerup>;
-         using powerupexec_action = eosio::action_wrapper<"powerupexec"_n, &system_contract::powerupexec>;
-         using powerup_action = eosio::action_wrapper<"powerup"_n, &system_contract::powerup>;
 
       private:
          // Implementation details:
